@@ -40,10 +40,16 @@ public:
     TreeNode* make(int val) { return &nodes_.emplace_back(val); }
 
     TreeNode* from_level_order(const LevelOrder& values) {
-        if (values.empty() || !values.front().has_value()) {
+        if (values.empty()) {
             return nullptr;
         }
-        TreeNode* root = make(*values.front());
+        // Bind to a reference so the has_value() check and the dereference are
+        // visibly on the same object (bugprone-unchecked-optional-access).
+        const std::optional<int>& first = values.front();
+        if (!first.has_value()) {
+            return nullptr;
+        }
+        TreeNode* root = make(*first);
         std::queue<TreeNode*> parents;
         parents.push(root);
         std::size_t i = 1;
@@ -51,8 +57,11 @@ public:
             TreeNode* parent = parents.front();
             parents.pop();
             for (TreeNode** child : {&parent->left, &parent->right}) {
-                if (i < values.size() && values[i].has_value()) {
-                    *child = make(*values[i]);
+                if (i >= values.size()) {
+                    break;
+                }
+                if (const std::optional<int>& value = values[i]; value.has_value()) {
+                    *child = make(*value);
                     parents.push(*child);
                 }
                 ++i;
