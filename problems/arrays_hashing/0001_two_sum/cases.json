@@ -1,0 +1,20 @@
+{
+  "cases": [
+    {
+      "name": "example_1",
+      "input": { "nums": [2, 7, 11, 15], "target": 9 },
+      "expected": [0, 1]
+    },
+    {
+      "name": "example_2",
+      "input": { "nums": [3, 2, 4], "target": 6 },
+      "expected": [1, 2],
+      "note": "nums[0] + nums[0] == target, but one element cannot be used twice"
+    },
+    {
+      "name": "example_3",
+      "input": { "nums": [3, 3], "target": 6 },
+      "expected": [0, 1]
+    }
+  ]
+}

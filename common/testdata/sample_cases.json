@@ -1,0 +1,15 @@
+{
+  "cases": [
+    {
+      "name": "sum_basic",
+      "input": { "a": 2, "b": 3 },
+      "expected": 5
+    },
+    {
+      "name": "sum negative",
+      "input": { "a": -4, "b": 1 },
+      "expected": -3,
+      "note": "space in the name checks test-id sanitizing"
+    }
+  ]
+}
