@@ -1,0 +1,48 @@
+[project]
+name = "leetcode-python"
+version = "0.1.0"
+description = "LeetCode solutions in Python, several variants per problem"
+requires-python = ">=3.12"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4",
+    "ruff>=0.14",
+    "mypy>=1.18",
+    "pip-audit>=2.9",
+]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["problems", "common/tests", "tools/tests"]
+pythonpath = ["common"]
+# Every problem has its own solution.py, so modules must not share sys.path.
+addopts = ["--import-mode=importlib", "-ra", "--strict-markers"]
+python_files = ["test_*.py"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["common"]
+
+[tool.ruff.lint]
+select = [
+    "E", "W", "F", "I", "N", "UP", "B", "C4", "SIM", "RUF", "PT", "PL", "PERF", "S",
+]
+ignore = [
+    "PLR2004", # magic values are normal in algorithm code
+]
+
+[tool.ruff.lint.per-file-ignores]
+"**/test_*.py" = ["S101"] # assert is how pytest works
+"tools/**" = ["S603", "S607"] # tools run fixed git/python commands
+".claude/hooks/**" = ["S603", "S607"]
+
+[tool.mypy]
+strict = true
+python_version = "3.12"
+mypy_path = "common"
+warn_unreachable = true
