@@ -1,6 +1,6 @@
 """PreToolUse hook for Edit/Write: enforces "mentor, not solution generator".
 
-Writing a problem's solution.hpp or solution.py turns into a permission prompt,
+Writing a problem's solution.py turns into a permission prompt,
 so Jakub sees and approves every such edit (for example, setting the shared
 signature, or after he wrote "pokaż rozwiązanie").
 """
@@ -12,7 +12,7 @@ import re
 import sys
 
 # Matched against the path with backslashes turned into slashes.
-SOLUTION_RE = re.compile(r"problems/[^/]+/[^/]+/(cpp/solution\.hpp|python/solution\.py)$")
+SOLUTION_RE = re.compile(r"problems/[^/]+/[^/]+/solution\.py$")
 
 
 def main() -> int:

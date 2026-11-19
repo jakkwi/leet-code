@@ -11,7 +11,7 @@ from lccommon.cases import Case, load_cases, variant_case_params
 from lccommon.list_node import ListNode, from_list, to_list
 from lccommon.tree_node import from_level_order, to_level_order
 
-SAMPLE = Path(__file__).resolve().parents[2] / "testdata" / "sample_cases.json"
+SAMPLE = Path(__file__).resolve().parents[1] / "testdata" / "sample_cases.json"
 
 VARIANTS: dict[str, Callable[[int, int], int]] = {
     "add": lambda a, b: a + b,

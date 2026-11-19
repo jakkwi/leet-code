@@ -3,8 +3,6 @@
 Rules (see .claude/rules/architecture.md):
 - problems/<pattern>/<NNNN_slug>/ with a known pattern and a well-formed name;
 - every problem has the full file set;
-- C++ quoted includes name a file in the same folder (shared code comes in
-  through <lc/...> only);
 - Python imports only the standard library, lccommon and pytest, and never
   touches sys.path or another problem's files;
 - cases.json is well formed and case names are unique.
@@ -26,29 +24,10 @@ if __package__ in (None, ""):
 from patterns import PATTERNS
 
 ROOT = Path(__file__).resolve().parents[1]
-REQUIRED = (
-    "README.md",
-    "cases.json",
-    "cpp/solution.hpp",
-    "cpp/test.cpp",
-    "python/solution.py",
-    "python/test_solution.py",
-)
+REQUIRED = ("README.md", "cases.json", "solution.py", "test_solution.py")
 PROBLEM_RE = re.compile(r"^\d{4}_[a-z0-9]+(_[a-z0-9]+)*$")
-QUOTED_INCLUDE_RE = re.compile(r'^\s*#\s*include\s+"([^"]+)"', re.MULTILINE)
 ALLOWED_PY = {"lccommon", "pytest", "__future__"} | set(sys.stdlib_module_names)
 FORBIDDEN_CALLS = {"sys.path.insert", "sys.path.append", "importlib.import_module"}
-
-
-def check_cpp(problem: Path) -> list[str]:
-    errors: list[str] = []
-    for src in sorted((problem / "cpp").glob("*.[ch]pp")):
-        errors.extend(
-            f'{src}: #include "{inc}" must be a file in the same folder'
-            for inc in QUOTED_INCLUDE_RE.findall(src.read_text(encoding="utf-8"))
-            if "/" in inc or "\\" in inc or not (src.parent / inc).is_file()
-        )
-    return errors
 
 
 def _dotted(node: ast.expr) -> str:
@@ -61,7 +40,7 @@ def _dotted(node: ast.expr) -> str:
 
 def check_python(problem: Path) -> list[str]:
     errors: list[str] = []
-    for src in sorted((problem / "python").glob("*.py")):
+    for src in sorted(problem.glob("*.py")):
         tree = ast.parse(src.read_text(encoding="utf-8"), filename=str(src))
         for node in ast.walk(tree):
             if isinstance(node, ast.Import):
@@ -124,7 +103,7 @@ def check(root: Path) -> list[str]:
             if missing:
                 errors.append(f"{problem}: missing {', '.join(missing)}")
                 continue
-            errors += check_cpp(problem) + check_python(problem) + check_cases(problem)
+            errors += check_python(problem) + check_cases(problem)
     return errors
 
 

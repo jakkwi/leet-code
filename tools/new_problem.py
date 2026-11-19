@@ -25,14 +25,11 @@ SLUG_RE = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 
 
 def placeholders(pattern: str, number: int, slug: str, title: str) -> dict[str, str]:
-    snake = slug.replace("-", "_")
     return {
         "NUMBER": f"{number:04d}",
         "TITLE": title,
         "URL": f"https://leetcode.com/problems/{slug}/",
         "PATTERN_TITLE": PATTERNS[pattern],
-        "NAMESPACE": f"p{number:04d}_{snake}",
-        "SUITE": "".join(part.capitalize() for part in slug.split("-")),
     }
 
 
@@ -65,11 +62,14 @@ def create(root: Path, pattern: str, number: int, slug: str, title: str | None =
 
     values = placeholders(pattern, number, slug, title)
     for src in sorted(TEMPLATE.rglob("*")):
-        if src.is_dir():
+        if src.is_dir() or "__pycache__" in src.parts:
             continue
         dst = target / src.relative_to(TEMPLATE)
         dst.parent.mkdir(parents=True, exist_ok=True)
-        dst.write_text(render(src.read_text(encoding="utf-8"), values), encoding="utf-8")
+        # newline="\n": LF on Windows too, matching .gitattributes.
+        dst.write_text(
+            render(src.read_text(encoding="utf-8"), values), encoding="utf-8", newline="\n"
+        )
     return target
 
 
@@ -86,7 +86,6 @@ def main(argv: list[str] | None = None) -> int:
         print(f"error: {exc}", file=sys.stderr)
         return 1
     print(f"created {path.relative_to(ROOT).as_posix()}")
-    print("re-run CMake configure so the new test target is picked up")
     return 0
 
 

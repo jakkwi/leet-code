@@ -1,5 +1,3 @@
-# C++ dependencies (cmake/Dependencies.cmake) are pinned by commit + SHA-256
-# and bumped by hand: Dependabot does not understand FetchContent.
 version: 2
 updates:
   - package-ecosystem: "uv"

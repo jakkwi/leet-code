@@ -11,12 +11,12 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SHARED = ["common/python", "tools", ".claude/hooks"]
+SHARED = ["common", "tools", ".claude/hooks"]
 
 
 def targets() -> list[list[str]]:
     runs = [SHARED]
-    runs += [[p.relative_to(ROOT).as_posix()] for p in sorted(ROOT.glob("problems/*/*/python"))]
+    runs += [[p.relative_to(ROOT).as_posix()] for p in sorted(ROOT.glob("problems/*/*/"))]
     return runs
 
 

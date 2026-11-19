@@ -22,4 +22,4 @@
 
 ## Pitfalls
 
-<!-- Bugs you hit, UB, overflow, off-by-one, C++ vs Python differences. -->
+<!-- Bugs you hit, off-by-one errors, hidden costs of Python operations. -->

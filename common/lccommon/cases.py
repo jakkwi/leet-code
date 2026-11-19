@@ -1,4 +1,4 @@
-"""Loader for a problem's cases.json (same file the C++ tests read)."""
+"""Loader for a problem's cases.json."""
 
 from __future__ import annotations
 

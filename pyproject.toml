@@ -1,7 +1,7 @@
 [project]
-name = "leetcode-cpp-python"
+name = "leetcode-python"
 version = "0.1.0"
-description = "LeetCode solutions in C++20 and Python with shared test cases"
+description = "LeetCode solutions in Python, several variants per problem"
 requires-python = ">=3.12"
 dependencies = []
 
@@ -11,18 +11,14 @@ dev = [
     "ruff>=0.14",
     "mypy>=1.18",
     "pip-audit>=2.9",
-    # Same major version as the LLVM bundled with Visual Studio 2022, so local
-    # formatting matches CI byte for byte.
-    "clang-format==19.1.*",
-    "clang-tidy==19.1.*",
 ]
 
 [tool.uv]
 package = false
 
 [tool.pytest.ini_options]
-testpaths = ["problems", "common/python/tests", "tools/tests"]
-pythonpath = ["common/python"]
+testpaths = ["problems", "common/tests", "tools/tests"]
+pythonpath = ["common"]
 # Every problem has its own solution.py, so modules must not share sys.path.
 addopts = ["--import-mode=importlib", "-ra", "--strict-markers"]
 python_files = ["test_*.py"]
@@ -30,7 +26,7 @@ python_files = ["test_*.py"]
 [tool.ruff]
 line-length = 100
 target-version = "py312"
-src = ["common/python"]
+src = ["common"]
 
 [tool.ruff.lint]
 select = [
@@ -48,5 +44,5 @@ ignore = [
 [tool.mypy]
 strict = true
 python_version = "3.12"
-mypy_path = "common/python"
+mypy_path = "common"
 warn_unreachable = true

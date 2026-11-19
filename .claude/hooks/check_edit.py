@@ -2,8 +2,7 @@
 
 Only lines that are new compared to the last commit are checked for dashes,
 so older text never blocks an edit. Exit 2 shows the problem to the agent.
-Python files go through ruff format, C++ files through clang-format
-(templates excluded: their placeholders are not C++ yet).
+Python files go through ruff format.
 """
 
 from __future__ import annotations
@@ -15,7 +14,6 @@ import sys
 from pathlib import Path
 
 DASHES = (chr(0x2014), chr(0x2013))  # em dash, en dash
-CPP_SUFFIXES = {".cpp", ".hpp", ".h", ".cc"}
 
 
 def committed_lines(path: Path, root: Path) -> set[str]:
@@ -66,14 +64,8 @@ def main() -> int:
         )
         return 2
 
-    formatter: list[str] = []
     if path.suffix == ".py" and (ruff := find_tool("ruff", root)):
-        formatter = [ruff, "format", "--quiet"]
-    elif path.suffix in CPP_SUFFIXES and "templates" not in path.resolve().parts:
-        cf = find_tool("clang-format", root)
-        formatter = [cf, "-i"] if cf else []
-    if formatter:
-        subprocess.run([*formatter, str(path)], check=False, cwd=root)
+        subprocess.run([ruff, "format", "--quiet", str(path)], check=False, cwd=root)
     return 0
 
 
